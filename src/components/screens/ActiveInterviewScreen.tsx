@@ -215,7 +215,7 @@ export default function ActiveInterviewScreen() {
               ))}
             </div>
             <div>
-              {state.responses.length} of ~6 questions • Phase: {getPhaseDescription()}
+              Question {state.responses.length + 1} of ~6 • Phase: {getPhaseDescription()}
             </div>
           </div>
         </div>
