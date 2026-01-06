@@ -71,14 +71,22 @@ export function AnimatedCounter({
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    if (value === 0) {
+      setCount(0);
+      return;
+    }
+
     let start = 0;
     const end = value;
-    const incrementTime = (duration / end) * 2;
+    const incrementTime = Math.max(duration / end, 16); // Minimum 16ms per frame
     
     const timer = setInterval(() => {
       start += 1;
       setCount(start);
-      if (start === end) clearInterval(timer);
+      if (start >= end) {
+        clearInterval(timer);
+        setCount(end); // Ensure final value is exact
+      }
     }, incrementTime);
 
     return () => clearInterval(timer);

@@ -9,7 +9,7 @@ import { LoadingButton } from '@/components/ui/LoadingComponents';
 export default function ActiveInterviewScreen() {
   const { state, dispatch } = useInterview();
   const [answer, setAnswer] = useState('');
-  const [timeLeft, setTimeLeft] = useState(state.timeRemaining || 1200); // 20 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(1200); // Always start with 20 minutes (1200 seconds)
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
 
@@ -33,7 +33,7 @@ export default function ActiveInterviewScreen() {
   }, [state.currentQuestion, state.currentState, dispatch]); // Removed problematic dependencies
 
   useEffect(() => {
-    // Timer countdown
+    // Timer countdown - only start once when component mounts
     const timer = setInterval(() => {
       setTimeLeft(prev => {
         if (prev <= 1) {
@@ -47,7 +47,7 @@ export default function ActiveInterviewScreen() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [dispatch]);
+  }, []); // Empty dependency array - only run once on mount
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
