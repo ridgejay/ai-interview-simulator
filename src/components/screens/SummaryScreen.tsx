@@ -11,6 +11,11 @@ export default function SummaryScreen() {
 
   const handleRestartInterview = () => {
     setIsRestarting(true);
+    // Clear any saved session data to ensure clean start
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('interview_session');
+      localStorage.removeItem('interview_session_backup');
+    }
     setTimeout(() => {
       dispatch({ type: 'RESET_INTERVIEW' });
       setIsRestarting(false);
@@ -111,7 +116,7 @@ export default function SummaryScreen() {
                 <AnimatedCounter value={state.responses.length} />
               </div>
               <div className="text-slate-600 font-medium">Questions Answered</div>
-              <div className="text-xs text-slate-400 mt-1">of ~6 total</div>
+              <div className="text-xs text-slate-400 mt-1">of ~5 total</div>
             </div>
           </FadeIn>
           

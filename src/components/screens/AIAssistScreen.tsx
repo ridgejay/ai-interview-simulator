@@ -13,7 +13,7 @@ export default function AIAssistScreen() {
     if (isGeneratingNext) return;
     
     // Check if we should continue or go to summary
-    if (state.responses.length >= 5 || state.usedQuestions.length >= 6) {
+    if (state.responses.length >= 5 || state.usedQuestions.length >= 5) {
       dispatch({ type: 'SET_STATE', payload: 'summary' });
     } else {
       setIsGeneratingNext(true);

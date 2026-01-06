@@ -9,7 +9,11 @@ import { LoadingButton } from '@/components/ui/LoadingComponents';
 export default function ActiveInterviewScreen() {
   const { state, dispatch } = useInterview();
   const [answer, setAnswer] = useState('');
-  const [timeLeft, setTimeLeft] = useState(1200); // Always start with 20 minutes (1200 seconds)
+  const [timeLeft, setTimeLeft] = useState(() => {
+    // Check if we have a saved interview time, otherwise start with 20 minutes
+    const savedTime = state.timeRemaining;
+    return savedTime !== undefined && savedTime > 0 ? savedTime : 1200;
+  });
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [isLoadingQuestion, setIsLoadingQuestion] = useState(false);
 
@@ -30,24 +34,30 @@ export default function ActiveInterviewScreen() {
       };
       loadInitialQuestion();
     }
-  }, [state.currentQuestion, state.currentState, dispatch]); // Removed problematic dependencies
+  }, [state.currentQuestion, state.currentState, dispatch]);
 
   useEffect(() => {
-    // Timer countdown - only start once when component mounts
+    // Timer countdown - persist across the entire interview
+    if (state.currentState !== 'active') return;
+    
     const timer = setInterval(() => {
       setTimeLeft(prev => {
-        if (prev <= 1) {
+        const newTime = prev <= 1 ? 0 : prev - 1;
+        
+        // Update global state for persistence
+        dispatch({ type: 'UPDATE_TIME', payload: newTime });
+        
+        if (newTime <= 0) {
           clearInterval(timer);
-          // Move to summary when time runs out
           dispatch({ type: 'SET_STATE', payload: 'summary' });
           return 0;
         }
-        return prev - 1;
+        return newTime;
       });
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []); // Empty dependency array - only run once on mount
+  }, [state.currentState, dispatch]); // Only restart if we leave and re-enter active state
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -130,7 +140,7 @@ export default function ActiveInterviewScreen() {
             <div className="text-sm text-slate-600">
               <span className="font-medium">{getPhaseDescription()}</span>
               <span className="mx-2">•</span>
-              <span>Question {state.responses.length + 1} of ~6</span>
+              <span>Question {state.responses.length + 1} of ~5</span>
             </div>
             <div className={`text-2xl font-mono font-bold ${timeLeft < 300 ? 'text-red-600' : 'text-slate-900'}`}>
               {formatTime(timeLeft)}
@@ -204,7 +214,7 @@ export default function ActiveInterviewScreen() {
           {/* Progress indicator */}
           <div className="text-center text-sm text-slate-500">
             <div className="flex justify-center items-center gap-2 mb-2">
-              {[...Array(6)].map((_, i) => (
+              {[...Array(5)].map((_, i) => (
                 <div 
                   key={i}
                   className={`w-2 h-2 rounded-full ${
@@ -215,7 +225,7 @@ export default function ActiveInterviewScreen() {
               ))}
             </div>
             <div>
-              Question {state.responses.length + 1} of ~6 • Phase: {getPhaseDescription()}
+              Question {state.responses.length + 1} of ~5 • Phase: {getPhaseDescription()}
             </div>
           </div>
         </div>

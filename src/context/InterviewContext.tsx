@@ -99,7 +99,8 @@ const interviewReducer = (state: InterviewData, action: InterviewAction): Interv
         responses: [],
         usedQuestions: [],
         weakAreas: [],
-        interviewPhase: 'warmup'
+        interviewPhase: 'warmup',
+        timeRemaining: 1200 // Reset to 20 minutes
       };
     
     case 'LOAD_SESSION':
