@@ -22,7 +22,7 @@ export function generateQuestionTypePrompt(usedTypes: string[] = []): string {
   
   const randomType = availableTypes[Math.floor(Math.random() * availableTypes.length)];
   
-  const typeInstructions = {
+  const typeInstructions: Record<string, string> = {
     'scenario-based': 'Create a realistic workplace scenario where they need to make technical decisions',
     'debugging': 'Present a specific error or bug that requires systematic troubleshooting',
     'architecture': 'Ask them to design or structure a complex system or component',
@@ -35,5 +35,6 @@ export function generateQuestionTypePrompt(usedTypes: string[] = []): string {
     'trade-offs': 'Explore their understanding of technical decision-making'
   };
   
-  return `Use a ${randomType} approach: ${typeInstructions[randomType]}`;
+  const instruction = typeInstructions[randomType] || 'Create an engaging technical question';
+  return `Use a ${randomType} approach: ${instruction}`;
 }
