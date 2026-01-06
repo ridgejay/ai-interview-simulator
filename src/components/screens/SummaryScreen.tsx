@@ -113,7 +113,7 @@ export default function SummaryScreen() {
           <FadeIn delay={200}>
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 text-center transform hover:scale-105 transition-transform duration-200">
               <div className="text-4xl font-bold text-indigo-600 mb-2">
-                <AnimatedCounter value={state.responses.length} />
+                <AnimatedCounter value={state.responses.filter(r => !r.questionId.includes('-followup')).length} />
               </div>
               <div className="text-slate-600 font-medium">Questions Answered</div>
               <div className="text-xs text-slate-400 mt-1">of ~5 total</div>

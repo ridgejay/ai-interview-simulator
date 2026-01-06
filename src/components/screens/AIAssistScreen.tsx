@@ -9,11 +9,14 @@ export default function AIAssistScreen() {
   const { state, dispatch } = useInterview();
   const [isGeneratingNext, setIsGeneratingNext] = useState(false);
 
+  // Calculate main question count (excluding follow-ups) for use throughout component
+  const mainQuestionCount = state.responses.filter(r => !r.questionId.includes('-followup')).length;
+
   const handleContinue = async () => {
     if (isGeneratingNext) return;
     
-    // Check if we should continue or go to summary
-    if (state.responses.length >= 5 || state.usedQuestions.length >= 5) {
+    // Check if we should complete the interview (5 main questions, excluding follow-ups)
+    if (mainQuestionCount >= 5) {
       dispatch({ type: 'SET_STATE', payload: 'summary' });
     } else {
       setIsGeneratingNext(true);
@@ -207,7 +210,7 @@ export default function AIAssistScreen() {
                   className="mt-6"
                 >
                   {isGeneratingNext ? 'Generating Next Question...' : 
-                   state.responses.length >= 4 ? 'Complete Interview' : 'Continue Interview'}
+                   mainQuestionCount >= 4 ? 'Complete Interview' : 'Continue Interview'}
                 </LoadingButton>
               </div>
             </div>

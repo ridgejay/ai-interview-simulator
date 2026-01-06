@@ -140,7 +140,7 @@ export default function ActiveInterviewScreen() {
             <div className="text-sm text-slate-600">
               <span className="font-medium">{getPhaseDescription()}</span>
               <span className="mx-2">•</span>
-              <span>Question {state.responses.length + 1} of ~5</span>
+              <span>Question {state.responses.filter(r => !r.questionId.includes('-followup')).length + 1} of ~5</span>
             </div>
             <div className={`text-2xl font-mono font-bold ${timeLeft < 300 ? 'text-red-600' : 'text-slate-900'}`}>
               {formatTime(timeLeft)}
@@ -214,18 +214,21 @@ export default function ActiveInterviewScreen() {
           {/* Progress indicator */}
           <div className="text-center text-sm text-slate-500">
             <div className="flex justify-center items-center gap-2 mb-2">
-              {[...Array(5)].map((_, i) => (
-                <div 
-                  key={i}
-                  className={`w-2 h-2 rounded-full ${
-                    i < state.responses.length ? 'bg-blue-600' : 
-                    i === state.responses.length ? 'bg-blue-300' : 'bg-slate-300'
-                  }`}
-                />
-              ))}
+              {[...Array(5)].map((_, i) => {
+                const mainQuestionCount = state.responses.filter(r => !r.questionId.includes('-followup')).length;
+                return (
+                  <div 
+                    key={i}
+                    className={`w-2 h-2 rounded-full ${
+                      i < mainQuestionCount ? 'bg-blue-600' : 
+                      i === mainQuestionCount ? 'bg-blue-300' : 'bg-slate-300'
+                    }`}
+                  />
+                );
+              })}
             </div>
             <div>
-              Question {state.responses.length + 1} of ~5 • Phase: {getPhaseDescription()}
+              Question {state.responses.filter(r => !r.questionId.includes('-followup')).length + 1} of ~5 • Phase: {getPhaseDescription()}
             </div>
           </div>
         </div>
