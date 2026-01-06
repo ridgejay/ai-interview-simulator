@@ -245,7 +245,7 @@ export default function AIAssistScreen() {
                     <div className="text-slate-400 text-xs">
                       <div className="mb-2">Interview Progress:</div>
                       <div>Phase: {state.interviewPhase}</div>
-                      <div>Questions: {state.responses.length}</div>
+                      <div>Questions: {mainQuestionCount}</div>
                       <div>Strong answers: {state.responses.filter(r => !r.isWeak).length}</div>
                     </div>
                   </div>

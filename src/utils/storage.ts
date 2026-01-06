@@ -71,6 +71,23 @@ export class InterviewStorage {
     }
   }
 
+  static clearAllSessionData(): void {
+    try {
+      localStorage.removeItem(this.STORAGE_KEY);
+      localStorage.removeItem(this.BACKUP_KEY);
+      // Clear any other interview-related keys
+      Object.keys(localStorage).forEach(key => {
+        if (key.includes('interview') || key.includes('session')) {
+          localStorage.removeItem(key);
+        }
+      });
+      // Clear session storage too
+      sessionStorage.clear();
+    } catch (error) {
+      console.error('Failed to clear all session data:', error);
+    }
+  }
+
   static hasStoredSession(): boolean {
     try {
       return localStorage.getItem(this.STORAGE_KEY) !== null;

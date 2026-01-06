@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useInterview } from '@/context/InterviewContext';
 import { AnimatedCounter, ProgressRing, FadeIn } from '@/components/ui/AnimationComponents';
 import { LoadingButton } from '@/components/ui/LoadingComponents';
+import { InterviewStorage } from '@/utils/storage';
 
 export default function SummaryScreen() {
   const { state, dispatch } = useInterview();
@@ -11,11 +12,8 @@ export default function SummaryScreen() {
 
   const handleRestartInterview = () => {
     setIsRestarting(true);
-    // Clear any saved session data to ensure clean start
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('interview_session');
-      localStorage.removeItem('interview_session_backup');
-    }
+    // Use comprehensive session clearing
+    InterviewStorage.clearAllSessionData();
     setTimeout(() => {
       dispatch({ type: 'RESET_INTERVIEW' });
       setIsRestarting(false);
@@ -30,8 +28,11 @@ export default function SummaryScreen() {
     };
   });
 
-  const weakAreas = state.responses
-    .filter(response => response.isWeak)
+  // Only count weak main questions (not follow-ups) for the "Needed Follow-up" metric
+  const weakMainQuestions = state.responses
+    .filter(response => !response.questionId.includes('-followup') && response.isWeak);
+  
+  const weakAreas = weakMainQuestions
     .map(response => response.questionId);
 
   const strongAnswers = state.responses
@@ -137,11 +138,11 @@ export default function SummaryScreen() {
           <FadeIn delay={600}>
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6 text-center transform hover:scale-105 transition-transform duration-200">
             <div className="text-4xl font-bold text-amber-600 mb-2">
-              <AnimatedCounter value={weakAreas.length} />
+              <AnimatedCounter value={weakMainQuestions.length} />
             </div>
             <div className="text-slate-600 font-medium">Needed Follow-up</div>
             <div className="text-xs text-slate-400 mt-1">
-              {weakAreas.length > 0 ? 'Room for improvement' : 'Great depth!'}
+              {weakMainQuestions.length > 0 ? 'Room for improvement' : 'Great depth!'}
             </div>
           </div>
           </FadeIn>
@@ -163,7 +164,7 @@ export default function SummaryScreen() {
         </div>
 
         {/* Where depth was shallow */}
-        {weakAreas.length > 0 && (
+        {weakMainQuestions.length > 0 && (
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-6">
             <h2 className="text-xl font-semibold text-orange-900 mb-4">
               Areas That Needed Follow-up
