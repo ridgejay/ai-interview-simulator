@@ -135,7 +135,7 @@ export default function PressureScreen() {
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               placeholder="Give me a specific example with real details..."
-              className={`w-full h-40 p-4 rounded-lg resize-none transition-all duration-300 ${
+              className={`w-full h-40 p-4 rounded-lg resize-none transition-all duration-300 text-slate-900 placeholder:text-slate-400 ${
                 isIntense 
                   ? 'border-2 border-amber-500 focus:ring-2 focus:ring-amber-400' 
                   : 'border border-slate-300 focus:ring-2 focus:ring-orange-500'

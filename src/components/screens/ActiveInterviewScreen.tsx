@@ -190,7 +190,7 @@ export default function ActiveInterviewScreen() {
               value={answer}
               onChange={(e) => setAnswer(e.target.value)}
               placeholder="Share a specific example from your experience..."
-              className="w-full h-32 p-4 border border-slate-300 rounded-lg resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full h-32 p-4 border border-slate-300 rounded-lg resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-slate-900 placeholder:text-slate-400"
             />
             
             <div className="flex justify-between items-center">

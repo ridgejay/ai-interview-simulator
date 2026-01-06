@@ -94,7 +94,7 @@ export default function LandingScreen() {
               value={candidateName}
               onChange={(e) => setCandidateName(e.target.value)}
               placeholder="Enter your name or preferred name"
-              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base"
+              className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-base text-slate-900 placeholder:text-slate-400"
               onKeyPress={(e) => e.key === 'Enter' && handleStartInterview()}
             />
             {showNamePrompt && (
